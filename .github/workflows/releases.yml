@@ -34,7 +34,7 @@ jobs:
               echo "$file not found."
             fi
           done
-        - name: Pre-release
+      - name: Pre-release
         run: echo ${{ github.sha }} > Release.txt
       - name: Release
         uses: softprops/action-gh-release@v2
