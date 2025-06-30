@@ -25,16 +25,16 @@ jobs:
       - name: Create zip and tar.gz files
         run: |
           for file in HanYuDaCiDian.zip HanYuDaCiDian-sc.zip stardict-edict-2.4.2.zip; do
-            dir="${file%.zip}"
-            if [ -d "$file" ]; then
-              mkdir -p $dir
-              unzip $file -d $dir
-              tar -czf "${dir}.tar.gz" "$dir"
+            if [ -f "$file" ]; then
+              dir="${file%.zip}"
+              mkdir -p "$dir"
+              unzip "$file" -d "$dir"
+              tar -czf "${dir}.tar.gz" -C "$dir" .
             else
-              echo ""
+              echo "$file not found."
             fi
           done
-      - name: Pre-release
+        - name: Pre-release
         run: echo ${{ github.sha }} > Release.txt
       - name: Release
         uses: softprops/action-gh-release@v2
