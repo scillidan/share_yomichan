@@ -2,7 +2,7 @@ name: Create Releases
 on:
   push:
     tags:
-      - "v*" # Trigger the action on new tags that start with 'v'
+      - "v*"
 permissions:
   contents: write
 jobs:
@@ -24,7 +24,7 @@ jobs:
           done
       - name: Create zip and tar.gz files
         run: |
-          for file in HanYuDaCiDian.zip HanYuDaCiDian-sc.zip stardict-edict-2.4.2.zip; do
+          for file in stardict-edict-2.4.2.zip; do
             if [ -f "$file" ]; then
               dir="${file%.zip}"
               mkdir -p "$dir"
