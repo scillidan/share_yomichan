@@ -38,7 +38,7 @@ jobs:
           IFO_FILE="stardict-ecdict-$VERSION.ifo"
           INPUT_FILE="$IFO_FILE"
           OUTPUT_FILE="../ecdict-$VERSION-yomitan.zip"
-          cd stardict-ecdict-$VERSION  # Change into the extracted directory
+          cd stardict-ecdict-$VERSION
           pyglossary "$INPUT_FILE" "$OUTPUT_FILE" --read-format=Stardict --write-format=Yomichan --name=ECDICT
       - name: Pre-release
         run: echo ${{ github.sha }} > Release.txt
@@ -48,4 +48,4 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           files: |
-            ecdict-*-yomitan.zip
+            ecdict/ecdict-*-yomitan.zip
