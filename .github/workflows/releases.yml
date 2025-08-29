@@ -22,33 +22,40 @@ jobs:
       - name: Install pyglossary
         run: |
           pip install pyglossary lxml beautifulsoup4 python-idzip
-    	- name: Get latest release assets info
-      	id: get_latest
-      	run: |
-        	api_url="https://api.github.com/repos/skywind3000/ECDICT/releases/latest"
-        	response=$(curl -s $api_url)
-        	asset_info=$(echo "$response" | jq -r '.assets[] | select(.name | test("^ecdict-stardict-[0-9]+.zip$")) | {name: .name, url: .browser_download_url} | @base64' | head -n 1)
-        	if [ -z "$asset_info" ]; then
-          	echo "No matching asset found"
-          	exit 1
-        	fi
-        	asset_name=$(echo "$asset_info" | base64 --decode | jq -r '.name')
-        	asset_url=$(echo "$asset_info" | base64 --decode | jq -r '.url')
-        	echo "asset_name=$asset_name" >> $GITHUB_OUTPUT
-        	echo "asset_url=$asset_url" >> $GITHUB_OUTPUT
-	    - name: Download latest matching zip asset
-	      run: |
-        	curl -L -o ${{ steps.get_latest.outputs.asset_name }} ${{ steps.get_latest.outputs.asset_url }}
-    	- name: Unzip the downloaded zip file
-      	run: |
-        	unzip ${{ steps.get_latest.outputs.asset_name }}
-    	- name: Run pyglossary conversion
-      	run: |
-        	ver=$(echo "${{ steps.get_latest.outputs.asset_name }}" | grep -oP '(?<=ecdict-stardict-)[0-9]+(?=\.zip)')
-					input_dir="stardict-ecdict-${ver}"
-	      	input_ifo="${input_dir}/stardict-ecdict-${ver}.ifo"
-	      	output_zip="ecdict-${ver}-yomitan.zip"
-        	pyglossary "$input_ifo" "$output_zip" --read-format=Stardict --write-format=Yomichan --name=ECDICT
+      - name: Get latest release assets info
+        id: get_latest
+        run: >
+          api_url="https://api.github.com/repos/skywind3000/ECDICT/releases/latest"
+          response=$(curl -s $api_url)
+          asset_info=$(echo "$response" | jq -r '.assets[] | select(.name |
+          test("^ecdict-stardict-[0-9]+.zip$")) | {name: .name, url:
+          .browser_download_url} | @base64' | head -n 1)
+          if [ -z "$asset_info" ]; then
+            echo "No matching asset found"
+            exit 1
+          fi
+          asset_name=$(echo "$asset_info" | base64 --decode | jq -r '.name')
+          asset_url=$(echo "$asset_info" | base64 --decode | jq -r '.url')
+          echo "asset_name=$asset_name" >> $GITHUB_OUTPUT
+          echo "asset_url=$asset_url" >> $GITHUB_OUTPUT
+      - name: Download latest matching zip asset
+        run: >
+          curl -L -o ${{ steps.get_latest.outputs.asset_name }} ${{
+          steps.get_latest.outputs.asset_url }}
+      - name: Unzip the downloaded zip file
+        run: |
+          unzip ${{ steps.get_latest.outputs.asset_name }}
+      - name: Run pyglossary conversion
+        run: >
+          # Extract version number from the asset name, e.g.
+          ecdit-stardict-123.zip -> 123
+          ver=$(echo "${{ steps.get_latest.outputs.asset_name }}" | grep -oP
+          '(?<=ecdict-stardict-)[0-9]+(?=\.zip)')
+          input_dir="stardict-ecdict-${ver}"
+          input_ifo="${input_dir}/stardict-ecdict-${ver}.ifo"
+          output_zip="ecdict-${ver}-yomitan.zip"
+          pyglossary "$input_ifo" "$output_zip" --read-format=Stardict
+          --write-format=Yomichan --name=ECDICT
       - name: Pre-release
         run: echo ${{ github.sha }} > Release.txt
       - name: Release
