@@ -1,7 +1,3 @@
-# share_yomitan
+# share_yomichan
 
-[![Create Releases](https://github.com/scillidan/share_yomitan/actions/workflows/releases.yml/badge.svg)](https://github.com/scillidan/share_yomitan/actions/workflows/releases.yml)
-
-## resource
-
-- [CC-CEDICT and CC-Canto for Yomichan/Yomitan](https://github.com/Tykok/cedict-chinese-transformation)
+[![Create Releases](https://github.com/scillidan/share_yomichan/actions/workflows/releases.yml/badge.svg)](https://github.com/scillidan/share_yomichan/actions/workflows/releases.yml)
