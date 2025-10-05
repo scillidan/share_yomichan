@@ -37,7 +37,7 @@ jobs:
           VERSION=$(ls | grep 'stardict-ecdict-.*' | sed 's/stardict-ecdict-//;s/\// /')
           IFO_FILE="stardict-ecdict-$VERSION.ifo"
           INPUT_FILE="$IFO_FILE"
-          OUTPUT_FILE="../ecdict-$VERSION-yomitan.zip"
+          OUTPUT_FILE="../ecdict-$VERSION-yomichan.zip"
           cd stardict-ecdict-$VERSION
           pyglossary "$INPUT_FILE" "$OUTPUT_FILE" --read-format=Stardict --write-format=Yomichan --name=ECDICT
       - name: Pre-release
@@ -48,4 +48,4 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           files: |
-            ecdict/ecdict-*-yomitan.zip
+            ecdict/ecdict-*-yomichan.zip
